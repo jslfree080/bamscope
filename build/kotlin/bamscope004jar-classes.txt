@@ -1,0 +1,1 @@
+/Users/jslit/IdeaProjects/bamscope/build/classes/kotlin/main/com/jslfree080/bamscope/RunBAMScopeKt.class:/Users/jslit/IdeaProjects/bamscope/build/classes/kotlin/main/com/jslfree080/cli/BAMScopeCommand.class

@@ -9,8 +9,9 @@
       { "name" : "bamPath" },
       { "name" : "chrPos" },
       { "name" : "help" },
-      { "name" : "refFile" },
-      { "name" : "widthRange" }
+      { "name" : "outPath" },
+      { "name" : "refPath" },
+      { "name" : "width" }
     ]
   }
 ]

@@ -25,31 +25,35 @@ package com.jslfree080.cli
 
 import picocli.CommandLine
 
-@CommandLine.Command(name = "bamscope", version = ["bamscope 0.0.3"],
+@CommandLine.Command(name = "bamscope", version = ["bamscope 0.0.4"],
     description = ["A command line tool (in Kotlin/JVM) for visualizing BAM alignments."])
 class BAMScopeCommand : Runnable {
 
-    @CommandLine.Parameters(index = "0", description = ["Input chromosomal position. ex) chrN:XXXXXXXX"])
+    @CommandLine.Parameters(index = "0", description = ["Input chromosomal position.      ex) (chr)N:XXXXXXXX"])
     private lateinit var chrPos: String
 
-    @CommandLine.Parameters(index = "1", description = ["Path to an input bam file. ex) path/to/xxx.bam"])
+    @CommandLine.Parameters(index = "1", description = ["Path to an input bam file.       ex) path/to/x.bam"])
     private lateinit var bamPath: String
 
-    @CommandLine.Option(names = ["-help"], usageHelp = true, description = ["Show this help message and exit."])
+    @CommandLine.Option(names = ["-h", "--help"], usageHelp = true, description = ["Show this help message and exit."])
     private var help = false
 
-    @CommandLine.Option(names = ["-ref"], description = ["Path to a reference fasta. ex) path/to/xxx.fasta"])
-    private lateinit var refFile: String
+    @CommandLine.Option(names = ["-o", "--outPath"], description = ["Path to an output image.                 default) ."])
+    private var outPath = "."
 
-    @CommandLine.Option(names = ["-width"], description = ["Width of chromosomal range. default) 50"])
-    private var widthRange: Int = 50
+    @CommandLine.Option(names = ["-r", "--refPath"], description = ["Path to a reference fasta.       ex) path/to/x.fasta"])
+    private lateinit var refPath: String
+
+    @CommandLine.Option(names = ["-w", "--width"], description = ["Width of start to interest position.     default) 50"])
+    private var width = 50
 
     override fun run() {
         println("Welcome to bamscope!")
         println(chrPos)
         println(bamPath)
         println(help)
-        println(refFile)
-        println(widthRange)
+        println(outPath)
+        println(refPath)
+        println(width)
     }
 }
