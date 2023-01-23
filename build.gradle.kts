@@ -30,7 +30,7 @@ plugins {
 }
 
 group = "com.jslfree080"
-version = "0.0.2"
+version = "0.0.3"
 
 repositories {
     mavenCentral()
@@ -78,5 +78,5 @@ tasks.withType<Jar> {
     })
 }
 
-// ./gradlew build
+// ./gradlew build |or| ./gradlew clean build (Delete all the previous version of the dependencies)
 // java -jar build/libs/bamscope-X.X.X.jar
