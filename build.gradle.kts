@@ -26,11 +26,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "1.8.0"
     application
-    // kotlin("kapt") version "1.8.0" // kotlin.kapt
+    kotlin("kapt") version "1.8.0" // kotlin.kapt
 }
 
 group = "com.jslfree080"
-version = "0.0.1"
+version = "0.0.2"
 
 repositories {
     mavenCentral()
@@ -39,7 +39,7 @@ repositories {
 dependencies {
     testImplementation(kotlin("test"))
     implementation("info.picocli:picocli:4.7.0") // picocli library
-    // kapt("info.picocli:picocli-codegen:4.7.0") // picocli-codegen as kapt
+    kapt("info.picocli:picocli-codegen:4.7.0") // picocli-codegen as kapt
 }
 
 tasks.test {
@@ -47,20 +47,36 @@ tasks.test {
 }
 
 tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8" // "11" // version of jvmTarget
+    kotlinOptions.jvmTarget = "11" // version of jvmTarget
 }
 
-/*
 kapt { // kapt block with the argument project
     arguments {
         arg("project", "${project.group}/${project.name}")
     }
 }
-*/
 
 application {
     mainClass.set("RunBAMScopeKt")
 }
 
-// ./gradlew clean build
+tasks.withType<Jar> {
+    // Otherwise you'll get a "No main manifest attribute" error
+    manifest {
+        attributes["Main-Class"] = "com.jslfree080.bamscope.RunBAMScopeKt"
+    }
+
+    // To avoid the duplicate handling strategy error
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    // To add all of the dependencies
+    from(sourceSets.main.get().output)
+
+    dependsOn(configurations.runtimeClasspath)
+    from({
+        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+    })
+}
+
+// ./gradlew build
 // java -jar build/libs/bamscope-X.X.X.jar

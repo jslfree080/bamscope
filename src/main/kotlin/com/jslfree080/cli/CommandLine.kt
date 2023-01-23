@@ -25,7 +25,7 @@ package com.jslfree080.cli
 
 import picocli.CommandLine
 
-@CommandLine.Command(name = "bamscope", version = ["bamscope 0.0.1"],
+@CommandLine.Command(name = "bamscope", version = ["bamscope 0.0.2"],
     description = ["A command line tool (in Kotlin/JVM) for visualizing BAM alignments."])
 class BAMScopeCommand : Runnable {
 
@@ -45,6 +45,7 @@ class BAMScopeCommand : Runnable {
     private var widthRange: Int = 50
 
     override fun run() {
+        println("Welcome to bamscope!")
         println(chrPos)
         println(bamPath)
         println(help)

@@ -1,0 +1,16 @@
+[
+  {
+    "name" : "com.jslfree080.cli.BAMScopeCommand",
+    "allDeclaredConstructors" : true,
+    "allPublicConstructors" : true,
+    "allDeclaredMethods" : true,
+    "allPublicMethods" : true,
+    "fields" : [
+      { "name" : "bamPath" },
+      { "name" : "chrPos" },
+      { "name" : "help" },
+      { "name" : "refFile" },
+      { "name" : "widthRange" }
+    ]
+  }
+]
