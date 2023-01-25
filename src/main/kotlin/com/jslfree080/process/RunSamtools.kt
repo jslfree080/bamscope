@@ -21,16 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-class RunSamtools(private val chrPos: String, private val bamPath: String, private val width: Int) {
+package com.jslfree080.process
+
+class RunSamtools(chrPos: String, bamPath: String, width: Int) {
     val chr = chrPos.split(":")[0]
     val intPos = chrPos.split(":")[1]
-
-    fun startPos(): String {
-        return (intPos.toInt() - width).toString()
-    }
-    fun endPos(): String {
-        return (intPos.toInt() + width).toString()
-    }
-    // Running samtools in command line to be updated with some checks
-    // methods to be updated: samtoolsViewLines, samtoolsFaidxLines, samtoolsFaidxDict
+    val startPos = (intPos.toInt() - width).toString()
+    val endPos = (intPos.toInt() + width).toString()
+    // Run samtools to extract the reads within the specified region
+    private val samtoolsViewProcess: Process = ProcessBuilder("samtools", "view", bamPath, "$chr:$startPos-$endPos")
+        .redirectOutput(ProcessBuilder.Redirect.PIPE)
+        .start()
+    private val samtoolsViewOutput = samtoolsViewProcess.inputStream.bufferedReader().use { it.readText() }
+    val samtoolsViewLines = samtoolsViewOutput.split("\n")
+    // Run samtools to extract the reference sequence
+    // properties to be updated: samtoolsFaidxLines, samtoolsFaidxDict
 }
