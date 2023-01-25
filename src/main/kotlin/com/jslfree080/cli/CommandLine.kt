@@ -25,7 +25,7 @@ package com.jslfree080.cli
 
 import picocli.CommandLine
 
-@CommandLine.Command(name = "bamscope", version = ["bamscope 0.0.4"],
+@CommandLine.Command(name = "bamscope", version = ["bamscope 0.0.5"],
     description = ["A command line tool (in Kotlin/JVM) for visualizing BAM alignments."])
 class BAMScopeCommand : Runnable {
 
@@ -42,16 +42,16 @@ class BAMScopeCommand : Runnable {
     private var outPath = "."
 
     @CommandLine.Option(names = ["-r", "--refPath"], description = ["Path to a reference fasta.       ex) path/to/x.fasta"])
-    private lateinit var refPath: String
+    private var refPath = "noReferencePath"
 
     @CommandLine.Option(names = ["-w", "--width"], description = ["Width of start to interest position.     default) 50"])
     private var width = 50
 
     override fun run() {
         println("Welcome to bamscope!")
+        // Instantiate classes from process directory
         println(chrPos)
         println(bamPath)
-        println(help)
         println(outPath)
         println(refPath)
         println(width)
