@@ -32,7 +32,8 @@ class RunSamtools(chrPos: String, bamPath: String, width: Int, refPath: String) 
     val samtoolsViewLines = ReadSamtools.VIEW.processToLines(bamPath, chr, startPos, endPos)
     // Run samtools to extract the reference sequence
     private val extraPos = (2 * endPos.toInt() - startPos.toInt()).toString()
-    val samtoolsFaidxLines = if (refPath == "noReferencePath") listOf("noReferencePath")
+    private val samtoolsFaidxLines = if (refPath == "noReferencePath") listOf("noReference", "")
     else ReadSamtools.FAIDX.processToLines(refPath, chr, startPos, extraPos)
-    // properties to be updated: samtoolsFaidxString, samtoolsFaidxDict
+    private val samtoolsFaidxString = samtoolsFaidxLines.drop(1).joinToString("")
+    val samtoolsFaidxDict = (startPos.toInt() until extraPos.toInt()).zip(samtoolsFaidxString.toList()).toMap()
 }
