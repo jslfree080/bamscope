@@ -23,17 +23,16 @@
  */
 package com.jslfree080.process
 
-class RunSamtools(chrPos: String, bamPath: String, width: Int) {
+class RunSamtools(chrPos: String, bamPath: String, width: Int, refPath: String) {
     val chr = chrPos.split(":")[0]
     val intPos = chrPos.split(":")[1]
     val startPos = (intPos.toInt() - width).toString()
     val endPos = (intPos.toInt() + width).toString()
     // Run samtools to extract the reads within the specified region
-    private val samtoolsViewProcess: Process = ProcessBuilder("samtools", "view", bamPath, "$chr:$startPos-$endPos")
-        .redirectOutput(ProcessBuilder.Redirect.PIPE)
-        .start()
-    private val samtoolsViewOutput = samtoolsViewProcess.inputStream.bufferedReader().use { it.readText() }
-    val samtoolsViewLines = samtoolsViewOutput.split("\n")
+    val samtoolsViewLines = ReadSamtools.VIEW.processToLines(bamPath, chr, startPos, endPos)
     // Run samtools to extract the reference sequence
-    // properties to be updated: samtoolsFaidxLines, samtoolsFaidxDict
+    private val extraPos = (2 * endPos.toInt() - startPos.toInt()).toString()
+    val samtoolsFaidxLines = if (refPath == "noReferencePath") listOf("noReferencePath")
+    else ReadSamtools.FAIDX.processToLines(refPath, chr, startPos, extraPos)
+    // properties to be updated: samtoolsFaidxString, samtoolsFaidxDict
 }

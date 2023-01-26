@@ -26,7 +26,7 @@ package com.jslfree080.cli
 import com.jslfree080.process.RunSamtools
 import picocli.CommandLine
 
-@CommandLine.Command(name = "bamscope", version = ["bamscope 0.0.6"],
+@CommandLine.Command(name = "bamscope", version = ["bamscope 0.0.7"],
     description = ["A command line tool (in Kotlin/JVM) for visualizing BAM alignments."])
 class BAMScopeCommand : Runnable {
 
@@ -50,8 +50,9 @@ class BAMScopeCommand : Runnable {
 
     override fun run() {
         println("Welcome to bamscope!")
-        val runsamtools = RunSamtools(chrPos, bamPath, width)
+        val runsamtools = RunSamtools(chrPos, bamPath, width, refPath)
         println(runsamtools.samtoolsViewLines)
+        println(runsamtools.samtoolsFaidxLines)
         println(help)
         println(outPath)
         println(refPath)
