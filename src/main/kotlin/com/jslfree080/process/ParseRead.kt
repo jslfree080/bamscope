@@ -23,47 +23,141 @@
  */
 package com.jslfree080.process
 
+import com.jslfree080.process.cigars.*
+
 class ParseRead(samtoolsViewLines: List<String>) {
     // Parse the output to extract the read positions and bases
     private val nonEmptyLines = samtoolsViewLines.filter { it.isNotEmpty() }
-    val positions = mutableListOf<Int>()
-    val insertedIndexes = mutableListOf<Int>()
-    val bases = mutableListOf<String>()
-    val qualities = mutableListOf<Int>()
-    val directions = mutableListOf<String>()
-    val pseudoReferenceForLegend = mutableListOf<String>()
-    val blockNumbers = mutableListOf<Int>()
-    val partialIncrementWithZero = mutableListOf<Int>()
-    val yCoordinates = mutableListOf<Int>()
+
     private var yCoordinate = 50
+    private var yCoordinates = mutableListOf<Int>()
+    private var positions = mutableListOf<Int>()
+    private var directions = mutableListOf<String>()
+    private var pseudoReferenceForLegend = mutableListOf<String>()
+    private var bases = mutableListOf<String>()
+    private var qualities = mutableListOf<Int>()
+    private var blockNumbers = mutableListOf<Int>()
+    private var partialIncrementsWithZero = mutableListOf<Int>()
+    private var insertedIndexes = mutableListOf<Int>()
 
     fun appender() {
         val sb = StringBuilder()
-        val ths = mutableListOf<Thread>()
+
         nonEmptyLines.forEach {
-            yCoordinate += 100
-            var blockNumber = 0
             val fields = it.split("\t")
+
+            yCoordinate += 100
             val flag = fields[1].toInt()
-            val cigarString: String = fields[5]
             val seq: String = fields[9]
-            val qual: String = fields[10]
-            var refPos = fields[3].toInt()
+            val blockNumber = 0
             var seqPos = 0
+            var refPos = fields[3].toInt()
+            val qual: String = fields[10]
+
+            val cigarString: String = fields[5]
             val match = Regex("""(\d+)([MIDNSHP=X])""").findAll(cigarString)
 
-            match.forEach {
-                val th = Thread {
-                    val count = it.groupValues[1].toInt()
-                    println(count)
-                    val operation = it.groupValues[2]
-                    println(operation)
-                }
-                th.start()
-                ths.add(th)
-            }
+            var parameterMID = ParameterMID(
+                yCoordinate,
+                yCoordinates,
+                positions,
+                flag,
+                directions,
+                seq,
+                pseudoReferenceForLegend,
+                bases,
+                qualities,
+                blockNumber,
+                blockNumbers,
+                partialIncrementsWithZero)
+            val cigarM = CigarMatch(sb, parameterMID, seqPos, refPos, qual)
+            val cigarI = CigarInsertion(sb, parameterMID, seqPos, refPos, qual, insertedIndexes)
+            val cigarD = CigarDeletion(sb, parameterMID, seqPos, refPos)
+            val cigarS = CigarSoftClip(seqPos)
+            val cigarN = CigarSkippedRegion(refPos)
+            val cigarP = CigarPadding(refPos)
 
-            ths.forEach { thread -> thread.join() }
+            for (m in match) {
+                val count = m.groupValues[1].toInt()
+                when (m.groupValues[2]) {
+                    "M", "=", "X" -> {
+                        cigarM.count = count
+                        cigarM.partialIncrement = 0
+                        cigarM.parameterMID = parameterMID
+                        cigarM.seqPos = seqPos
+                        cigarM.refPos = refPos
+                        cigarM.qual = qual
+
+                        cigarM.commonAppend()
+                        cigarM.pseudoReferenceForLegendAppend()
+                        cigarM.basesAppend()
+                        cigarM.qualitiesAppend()
+                        cigarM.blockNumbersAppend()
+                        cigarM.partialIncrementsWithZeroAppend()
+
+                        parameterMID = cigarM.returnShiftedParameterMID()
+                        seqPos = cigarM.returnShiftedSeqPos()
+                        refPos = cigarM.returnShiftedRefPos()
+                    }
+                    "I" -> {
+                        cigarI.count = count
+                        cigarI.partialIncrement = 0
+                        cigarI.parameterMID = parameterMID
+                        cigarI.seqPos = seqPos
+                        cigarI.refPos = refPos
+                        cigarI.qual = qual
+                        cigarI.insertedIndexes = insertedIndexes
+
+                        cigarI.commonAppend()
+                        cigarI.pseudoReferenceForLegendAppend()
+                        cigarI.basesAppend()
+                        cigarI.qualitiesAppend()
+                        cigarI.blockNumbersAppend()
+                        cigarI.partialIncrementsWithZeroAppend()
+
+                        parameterMID = cigarI.returnShiftedParameterMID()
+                        seqPos = cigarI.returnShiftedSeqPos()
+                        refPos = cigarI.returnShiftedRefPos()
+                        insertedIndexes = cigarI.returnInsertedIndexes()
+                    }
+                    "D" -> {
+                        cigarD.count = count
+                        cigarD.partialIncrement = 0
+                        cigarD.parameterMID = parameterMID
+                        cigarD.seqPos = seqPos
+                        cigarD.refPos = refPos
+
+                        cigarD.commonAppend()
+                        cigarD.pseudoReferenceForLegendAppend()
+                        cigarD.basesAppend()
+                        cigarD.qualitiesAppend()
+                        cigarD.blockNumbersAppend()
+                        cigarD.partialIncrementsWithZeroAppend()
+
+                        parameterMID = cigarD.returnShiftedParameterMID()
+                        refPos = cigarD.returnShiftedRefPos()
+                    }
+                    "S" -> {
+                        cigarS.count = count
+                        cigarS.seqPos = seqPos
+
+                        seqPos = cigarS.returnShiftedSeqPos()
+                    }
+                    "H" -> {  }
+                    "N" -> {
+                        cigarN.count = count
+                        cigarN.refPos = refPos
+
+                        refPos = cigarN.returnShiftedRefPos()
+                    }
+                    "P" -> {
+                        cigarP.count = count
+                        cigarP.refPos = refPos
+
+                        refPos = cigarP.returnShiftedRefPos()
+                    }
+                }
+            }
         }
     }
 }

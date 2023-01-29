@@ -30,7 +30,7 @@ plugins {
 }
 
 group = "com.jslfree080"
-version = "0.0.9"
+version = "0.1.0"
 
 repositories {
     mavenCentral()
@@ -79,5 +79,5 @@ tasks.withType<Jar> {
 }
 
 // ./gradlew build |or| ./gradlew clean build (Delete all the previous version of the dependencies)
-// java -jar build/libs/bamscope-X.X.X.jar 18:53254446 ~/Downloads/sample_CD005_tcf4.bam
-// java -jar build/libs/bamscope-X.X.X.jar 18:53254446 ~/Downloads/sample_CD005_tcf4.bam -r ~/Downloads/human_g1k_v37_decoy.fasta
+// java -jar build/libs/bamscope-X.X.X.jar 18:53253385 ~/Downloads/sample_CD005_tcf4.bam
+// java -jar build/libs/bamscope-X.X.X.jar 18:53253385 ~/Downloads/sample_CD005_tcf4.bam -r ~/Downloads/human_g1k_v37_decoy.fasta

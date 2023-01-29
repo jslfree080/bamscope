@@ -27,7 +27,7 @@ import picocli.CommandLine
 import com.jslfree080.process.RunSamtools
 import com.jslfree080.process.ParseRead
 
-@CommandLine.Command(name = "bamscope", version = ["bamscope 0.0.9"],
+@CommandLine.Command(name = "bamscope", version = ["bamscope 0.1.0"],
     description = ["A command line tool (in Kotlin/JVM) for visualizing BAM alignments."])
 class BAMScopeCommand : Runnable {
 
