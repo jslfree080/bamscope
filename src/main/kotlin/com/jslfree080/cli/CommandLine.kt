@@ -23,11 +23,12 @@
  */
 package com.jslfree080.cli
 
+import com.jslfree080.process.BlockAdjustment
 import picocli.CommandLine
 import com.jslfree080.process.RunSamtools
 import com.jslfree080.process.ParseRead
 
-@CommandLine.Command(name = "bamscope", version = ["bamscope 0.1.0"],
+@CommandLine.Command(name = "bamscope", version = ["bamscope 0.2.0"],
     description = ["A command line tool (in Kotlin/JVM) for visualizing BAM alignments."])
 class BAMScopeCommand : Runnable {
 
@@ -50,11 +51,14 @@ class BAMScopeCommand : Runnable {
     private var width = 50
 
     override fun run() {
-        // println("Welcome to bamscope!")
         val runSamtools = RunSamtools(chrPos, bamPath, width, refPath)
-        // println(runSamtools.samtoolsViewLines)
-        // println(runSamtools.samtoolsFaidxDict)
         val parseRead = ParseRead(runSamtools.samtoolsViewLines)
         parseRead.appender()
+        val blockAdjustment = BlockAdjustment(
+            parseRead.positions,
+            parseRead.partialIncrementsWithZero,
+            parseRead.insertedIndexes
+        )
+        blockAdjustment.generateOutputForGap()
     }
 }

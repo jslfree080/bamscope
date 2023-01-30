@@ -31,14 +31,14 @@ class ParseRead(samtoolsViewLines: List<String>) {
 
     private var yCoordinate = 50
     private var yCoordinates = mutableListOf<Int>()
-    private var positions = mutableListOf<Int>()
+    var positions = mutableListOf<Int>()
     private var directions = mutableListOf<String>()
     private var pseudoReferenceForLegend = mutableListOf<String>()
     private var bases = mutableListOf<String>()
     private var qualities = mutableListOf<Int>()
     private var blockNumbers = mutableListOf<Int>()
-    private var partialIncrementsWithZero = mutableListOf<Int>()
-    private var insertedIndexes = mutableListOf<Int>()
+    var partialIncrementsWithZero = mutableListOf<Int>()
+    var insertedIndexes = mutableListOf<Int>()
 
     fun appender() {
         val sb = StringBuilder()
