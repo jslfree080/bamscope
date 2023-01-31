@@ -35,5 +35,5 @@ class RunSamtools(chrPos: String, bamPath: String, width: Int, refPath: String) 
     private val samtoolsFaidxLines = if (refPath == "noReferencePath") listOf("noReference", "")
     else ReadSamtools.FAIDX.processToLines(refPath, chr, startPos, extraPos)
     private val samtoolsFaidxString = samtoolsFaidxLines.drop(1).joinToString("")
-    val samtoolsFaidxDict = (startPos.toInt() until extraPos.toInt()).zip(samtoolsFaidxString.toList()).toMap()
+    val samtoolsFaidxMap = (startPos.toInt() until extraPos.toInt()).zip(samtoolsFaidxString.toList()).toMap()
 }

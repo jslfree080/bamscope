@@ -2,8 +2,9 @@ package com.jslfree080.process
 
 import kotlin.math.*
 
-class BlockAdjustment(positions: MutableList<Int>,
-                      partialIncrementsWithZero: MutableList<Int>,
+class BlockAdjustment(private val positions: MutableList<Int>,
+                      private val blockNumbers: MutableList<Int>,
+                      private val partialIncrementsWithZero: MutableList<Int>,
                       insertedIndexes: MutableList<Int>) {
     private val insertedPositions = insertedIndexes.map { positions[it] }
     private val partialIncrements = insertedIndexes.map { partialIncrementsWithZero[it] }
@@ -11,8 +12,10 @@ class BlockAdjustment(positions: MutableList<Int>,
         .filter { (_, list2) -> list2 == 1 }
         .map { (list1, _) -> list1 }
     private val newPositions = mutableListOf<Int>()
-    private var posIndex = 0
     private val outputForGap = mutableListOf<Int>()
+    private var posIndex = 0
+    private var inBlock = false
+    private var shiftCount = 0
 
     fun generateOutputForGap() {
         insertedPositionsStart.toSet().toList().forEach {
@@ -39,7 +42,25 @@ class BlockAdjustment(positions: MutableList<Int>,
             }
             outputForGap.add(partialMaxGap)
         }
-        val dictForShift = (insertedPositionsStart.toSet().toList()).zip(outputForGap)
-        println(dictForShift)
+        val mapForShift = (insertedPositionsStart.toSet().toList()).zip(outputForGap)
+
+        var pos: Int
+        positions.forEach {
+            pos = it
+            inBlock = partialIncrementsWithZero[posIndex] > 0
+            shiftCount =
+                if (inBlock) {
+                mapForShift
+                    .filter { (list1, _) -> list1 <= pos - partialIncrementsWithZero[posIndex] }
+                    .sumOf { (_, list2) -> list2 }
+                } else {
+                mapForShift
+                    .filter { (list1, _) -> list1 <= pos - blockNumbers[posIndex] }
+                    .sumOf { (_, list2) -> list2 } - blockNumbers[posIndex]
+                }
+            pos += shiftCount
+            newPositions.add(pos)
+            posIndex += 1
+        }
     }
 }

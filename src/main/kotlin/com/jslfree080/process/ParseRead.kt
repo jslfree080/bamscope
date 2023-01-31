@@ -36,7 +36,7 @@ class ParseRead(samtoolsViewLines: List<String>) {
     private var pseudoReferenceForLegend = mutableListOf<String>()
     private var bases = mutableListOf<String>()
     private var qualities = mutableListOf<Int>()
-    private var blockNumbers = mutableListOf<Int>()
+    var blockNumbers = mutableListOf<Int>()
     var partialIncrementsWithZero = mutableListOf<Int>()
     var insertedIndexes = mutableListOf<Int>()
 

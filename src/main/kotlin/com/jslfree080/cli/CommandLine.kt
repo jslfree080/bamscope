@@ -28,7 +28,7 @@ import picocli.CommandLine
 import com.jslfree080.process.RunSamtools
 import com.jslfree080.process.ParseRead
 
-@CommandLine.Command(name = "bamscope", version = ["bamscope 0.2.0"],
+@CommandLine.Command(name = "bamscope", version = ["bamscope 0.3.0"],
     description = ["A command line tool (in Kotlin/JVM) for visualizing BAM alignments."])
 class BAMScopeCommand : Runnable {
 
@@ -56,6 +56,7 @@ class BAMScopeCommand : Runnable {
         parseRead.appender()
         val blockAdjustment = BlockAdjustment(
             parseRead.positions,
+            parseRead.blockNumbers,
             parseRead.partialIncrementsWithZero,
             parseRead.insertedIndexes
         )
