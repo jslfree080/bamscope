@@ -24,11 +24,12 @@
 package com.jslfree080.cli
 
 import com.jslfree080.process.BlockAdjustment
+import com.jslfree080.process.ExtractReference
 import picocli.CommandLine
 import com.jslfree080.process.RunSamtools
 import com.jslfree080.process.ParseRead
 
-@CommandLine.Command(name = "bamscope", version = ["bamscope 0.3.0"],
+@CommandLine.Command(name = "bamscope", version = ["bamscope 0.4.0"],
     description = ["A command line tool (in Kotlin/JVM) for visualizing BAM alignments."])
 class BAMScopeCommand : Runnable {
 
@@ -61,5 +62,10 @@ class BAMScopeCommand : Runnable {
             parseRead.insertedIndexes
         )
         blockAdjustment.generateOutputForGap()
+        if (runSamtools.samtoolsFaidxPair.size > 0) {
+            val extractReference = ExtractReference(blockAdjustment.pairForShift, runSamtools.samtoolsFaidxPair)
+            println(extractReference.returnBasesRef())
+        }
+        else {  }
     }
 }

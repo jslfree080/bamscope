@@ -39,6 +39,7 @@ class BlockAdjustment(private val positions: MutableList<Int>,
     private var posIndex = 0
     private var inBlock = false
     private var shiftCount = 0
+    var pairForShift = emptyList<Pair<Int, Int>>()
 
     fun generateOutputForGap() {
         insertedPositionsStart.toSet().toList().forEach {
@@ -65,7 +66,7 @@ class BlockAdjustment(private val positions: MutableList<Int>,
             }
             outputForGap.add(partialMaxGap)
         }
-        val mapForShift = (insertedPositionsStart.toSet().toList()).zip(outputForGap)
+        pairForShift = (insertedPositionsStart.toSet().toList()).zip(outputForGap)
 
         var pos: Int
         positions.forEach {
@@ -73,11 +74,11 @@ class BlockAdjustment(private val positions: MutableList<Int>,
             inBlock = partialIncrementsWithZero[posIndex] > 0
             shiftCount =
                 if (inBlock) {
-                mapForShift
+                    pairForShift
                     .filter { (list1, _) -> list1 <= pos - partialIncrementsWithZero[posIndex] }
                     .sumOf { (_, list2) -> list2 }
                 } else {
-                mapForShift
+                    pairForShift
                     .filter { (list1, _) -> list1 <= pos - blockNumbers[posIndex] }
                     .sumOf { (_, list2) -> list2 } - blockNumbers[posIndex]
                 }
