@@ -62,10 +62,9 @@ class BAMScopeCommand : Runnable {
             parseRead.insertedIndexes
         )
         blockAdjustment.generateOutputForGap()
-        if (runSamtools.samtoolsFaidxPair.size > 0) {
+        if (runSamtools.samtoolsFaidxPair.isNotEmpty()) {
             val extractReference = ExtractReference(blockAdjustment.pairForShift, runSamtools.samtoolsFaidxPair)
             println(extractReference.returnBasesRef())
         }
-        else {  }
     }
 }
