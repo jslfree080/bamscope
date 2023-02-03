@@ -30,7 +30,7 @@ plugins {
 }
 
 group = "com.jslfree080"
-version = "0.4.0"
+version = "0.5.0"
 
 repositories {
     mavenCentral()
@@ -38,8 +38,16 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+
     implementation("info.picocli:picocli:4.7.0") // picocli library
     kapt("info.picocli:picocli-codegen:4.7.0") // picocli-codegen as kapt
+
+    implementation("org.jetbrains.lets-plot:lets-plot-batik:3.0.0")
+    implementation("org.jetbrains.lets-plot:lets-plot-jfx:3.0.0")
+    implementation("org.jetbrains.lets-plot:lets-plot-common:3.0.0")
+    implementation("org.jetbrains.lets-plot:lets-plot-kotlin-jvm:4.2.0")
+    implementation("org.jetbrains.lets-plot:lets-plot-image-export:3.0.0")
+    implementation("org.slf4j:slf4j-simple:2.0.6") // dependencies for lets-plot library
 }
 
 tasks.test {

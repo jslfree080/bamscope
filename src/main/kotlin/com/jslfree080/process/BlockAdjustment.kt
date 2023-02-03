@@ -34,7 +34,7 @@ class BlockAdjustment(private val positions: MutableList<Int>,
     private val insertedPositionsStart = insertedPositions.zip(partialIncrements)
         .filter { (_, list2) -> list2 == 1 }
         .map { (list1, _) -> list1 }
-    private val newPositions = mutableListOf<Int>()
+    val newPositions = mutableListOf<Int>()
     private val outputForGap = mutableListOf<Int>()
     private var posIndex = 0
     private var inBlock = false

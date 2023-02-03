@@ -29,13 +29,13 @@ class ParseRead(samtoolsViewLines: List<String>) {
     // Parse the output to extract the read positions and bases
     private val nonEmptyLines = samtoolsViewLines.filter { it.isNotEmpty() }
 
-    private var yCoordinate = 50
-    private var yCoordinates = mutableListOf<Int>()
+    private var yCoordinate = 0
+    var yCoordinates = mutableListOf<Int>()
     var positions = mutableListOf<Int>()
     private var directions = mutableListOf<String>()
-    private var pseudoReferenceForLegend = mutableListOf<String>()
-    private var bases = mutableListOf<String>()
-    private var qualities = mutableListOf<Int>()
+    var pseudoReferenceForLegend = mutableListOf<String>()
+    var bases = mutableListOf<String>()
+    var qualities = mutableListOf<Int>()
     var blockNumbers = mutableListOf<Int>()
     var partialIncrementsWithZero = mutableListOf<Int>()
     var insertedIndexes = mutableListOf<Int>()
@@ -46,7 +46,7 @@ class ParseRead(samtoolsViewLines: List<String>) {
         nonEmptyLines.forEach {
             val fields = it.split("\t")
 
-            yCoordinate += 100
+            yCoordinate += 1
             val flag = fields[1].toInt()
             val seq: String = fields[9]
             val blockNumber = 0
@@ -158,6 +158,11 @@ class ParseRead(samtoolsViewLines: List<String>) {
                     }
                 }
             }
+
+            yCoordinates = parameterMID.yCoordinates
+            bases = parameterMID.bases
+            pseudoReferenceForLegend = parameterMID.pseudoReferenceForLegend
+            qualities = parameterMID.qualities
         }
     }
 }

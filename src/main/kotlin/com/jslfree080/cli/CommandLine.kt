@@ -23,13 +23,10 @@
  */
 package com.jslfree080.cli
 
-import com.jslfree080.process.BlockAdjustment
-import com.jslfree080.process.ExtractReference
+import com.jslfree080.process.*
 import picocli.CommandLine
-import com.jslfree080.process.RunSamtools
-import com.jslfree080.process.ParseRead
 
-@CommandLine.Command(name = "bamscope", version = ["bamscope 0.4.0"],
+@CommandLine.Command(name = "bamscope", version = ["bamscope 0.5.0"],
     description = ["A command line tool (in Kotlin/JVM) for visualizing BAM alignments."])
 class BAMScopeCommand : Runnable {
 
@@ -52,9 +49,13 @@ class BAMScopeCommand : Runnable {
     private var width = 50
 
     override fun run() {
+        val checkWidthFirst = CheckWidthFirst(width)
+        if (!checkWidthFirst.fixedResult()) { return }
         val runSamtools = RunSamtools(chrPos, bamPath, width, refPath)
         val parseRead = ParseRead(runSamtools.samtoolsViewLines)
         parseRead.appender()
+        val checkWidthAgain = CheckWidthAgain(width, parseRead.yCoordinates)
+        if (!checkWidthAgain.expDecayResult()) { return }
         val blockAdjustment = BlockAdjustment(
             parseRead.positions,
             parseRead.blockNumbers,
@@ -64,7 +65,20 @@ class BAMScopeCommand : Runnable {
         blockAdjustment.generateOutputForGap()
         if (runSamtools.samtoolsFaidxPair.isNotEmpty()) {
             val extractReference = ExtractReference(blockAdjustment.pairForShift, runSamtools.samtoolsFaidxPair)
-            println(extractReference.returnBasesRef())
+            val plotAlignment = PlotAlignment(
+                blockAdjustment.newPositions,
+                extractReference.newSamtoolsMap,
+                parseRead.yCoordinates,
+                parseRead.bases,
+                parseRead.pseudoReferenceForLegend,
+                extractReference.returnBasesRef(),
+                parseRead.qualities,
+                blockAdjustment.pairForShift,
+                runSamtools.chr,
+                runSamtools.intPos,
+                runSamtools.startPos,
+                runSamtools.endPos)
+            plotAlignment.letsPlot()
         }
     }
 }
