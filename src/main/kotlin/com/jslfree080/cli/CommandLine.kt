@@ -26,7 +26,7 @@ package com.jslfree080.cli
 import com.jslfree080.process.*
 import picocli.CommandLine
 
-@CommandLine.Command(name = "bamscope", version = ["bamscope 0.5.0"],
+@CommandLine.Command(name = "bamscope", version = ["bamscope 0.5.1"],
     description = ["A command line tool (in Kotlin/JVM) for visualizing BAM alignments."])
 class BAMScopeCommand : Runnable {
 

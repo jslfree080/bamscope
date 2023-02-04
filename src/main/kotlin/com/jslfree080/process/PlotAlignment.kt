@@ -69,17 +69,17 @@ class PlotAlignment(private val newPositions: MutableList<Int>,
     private val legendInterestIndices = newPositions
         .indices.filter { newPositions[it] >= startPos.toInt() && newPositions[it] <= endPos.toInt() }
 
-    private var baseColors = listOf("#DC143C", "#32CD32", "#1E90FF", "#FFD700", "#FFFFFF", "#1A2421", "#696969")
-        .zip(listOf("A", "G", "C", "T", "del", "gap", "N")).toMap()
+    private var baseColors = listOf("#DC143C", "#1E90FF", "#32CD32", "#FFD700", "#FFFFFF", "#1A2421", "#696969")
+        .zip(listOf("A", "C", "G", "T", "del", "gap", "N")).toMap()
 
     fun letsPlot() {
         // legend adjustment
         if ("A" !in (legendInterestIndices.map { bases[it] }))
         { baseColors = baseColors - "#DC143C" }
-        if ("G" !in (legendInterestIndices.map { bases[it] }))
-        { baseColors = baseColors - "#32CD32" }
         if ("C" !in (legendInterestIndices.map { bases[it] }))
         { baseColors = baseColors - "#1E90FF" }
+        if ("G" !in (legendInterestIndices.map { bases[it] }))
+        { baseColors = baseColors - "#32CD32" }
         if ("T" !in (legendInterestIndices.map { bases[it] }))
         { baseColors = baseColors - "#FFD700" }
         if ("del" !in (legendInterestIndices.map { bases[it] }))
@@ -99,6 +99,11 @@ class PlotAlignment(private val newPositions: MutableList<Int>,
                 ggtitle("$chr:$intPos") +
                 geomVLine(
                     xintercept = intPos.toInt() + shiftPositionOfInterest,
+                    color = "#FFFFFF",
+                    size = 0.5 * exp(-0.0048 * (yCoordinates.max() + 2))
+                ) +
+                geomHLine(
+                    yintercept = -1,
                     color = "#FFFFFF",
                     size = 0.5 * exp(-0.0048 * (yCoordinates.max() + 2))
                 ) +
