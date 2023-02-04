@@ -30,7 +30,7 @@ plugins {
 }
 
 group = "com.jslfree080"
-version = "0.5.1"
+version = "0.5.2"
 
 repositories {
     mavenCentral()

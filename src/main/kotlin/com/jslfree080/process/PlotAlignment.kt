@@ -42,7 +42,9 @@ class PlotAlignment(private val newPositions: MutableList<Int>,
                     private val chr: String,
                     private val intPos: String,
                     private val startPos: String,
-                    private val endPos: String) {
+                    private val endPos: String,
+                    private val bamFile: String,
+                    private val format: String) {
     // normalize qualities to [0, 1]
     private val alpha: MutableList<Double> = qualities
         .map { it.toDouble() / qualities.max().toDouble() } as MutableList<Double>
@@ -103,7 +105,7 @@ class PlotAlignment(private val newPositions: MutableList<Int>,
                     size = 0.5 * exp(-0.0048 * (yCoordinates.max() + 2))
                 ) +
                 geomHLine(
-                    yintercept = -1,
+                    yintercept = -0.5,
                     color = "#FFFFFF",
                     size = 0.5 * exp(-0.0048 * (yCoordinates.max() + 2))
                 ) +
@@ -139,6 +141,6 @@ class PlotAlignment(private val newPositions: MutableList<Int>,
         // p.show()
 
         // save the plot
-        ggsave(p, "example.png", 9.9, 600, "/Users/jslit/Downloads")
+        ggsave(p, "${bamFile}-${chr}-${intPos}.${format}", 9.9, 600, "/Users/jslit/Downloads")
     }
 }

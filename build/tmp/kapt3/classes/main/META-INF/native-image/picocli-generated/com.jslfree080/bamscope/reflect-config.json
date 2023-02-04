@@ -8,9 +8,11 @@
     "fields" : [
       { "name" : "bamPath" },
       { "name" : "chrPos" },
+      { "name" : "format" },
       { "name" : "help" },
       { "name" : "outPath" },
       { "name" : "refPath" },
+      { "name" : "sPath" },
       { "name" : "width" }
     ]
   }

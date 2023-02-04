@@ -26,32 +26,39 @@ package com.jslfree080.cli
 import com.jslfree080.process.*
 import picocli.CommandLine
 
-@CommandLine.Command(name = "bamscope", version = ["bamscope 0.5.1"],
+@CommandLine.Command(name = "bamscope", version = ["bamscope 0.5.2"],
     description = ["A command line tool (in Kotlin/JVM) for visualizing BAM alignments."])
 class BAMScopeCommand : Runnable {
 
     @CommandLine.Parameters(index = "0", description = ["Input chromosomal position.      ex) (chr)N:XXXXXXXX"])
     private lateinit var chrPos: String
 
-    @CommandLine.Parameters(index = "1", description = ["Path to an input bam file.       ex) path/to/x.bam"])
+    @CommandLine.Parameters(index = "1", description = ["Path to an input bam file.         ex) path/to/x.bam"])
     private lateinit var bamPath: String
+
+    @CommandLine.Option(names = ["-f", "--format"], description = ["File format of an output image.         default) png"])
+    private var format = "png"
 
     @CommandLine.Option(names = ["-h", "--help"], usageHelp = true, description = ["Show this help message and exit."])
     private var help = false
 
-    @CommandLine.Option(names = ["-o", "--outPath"], description = ["Path to an output image.                 default) ."])
+    @CommandLine.Option(names = ["-o", "--outPath"], description = ["Path to an output image.                  default) ."])
     private var outPath = "."
 
     @CommandLine.Option(names = ["-r", "--refPath"], description = ["Path to a reference fasta.       ex) path/to/x.fasta"])
     private var refPath = "noReferencePath"
 
+    @CommandLine.Option(names = ["-s", "--sPath"], description = ["Path to the samtools.    ex) /usr/local/bin/samtools"])
+    private var sPath = "samtools"
+
     @CommandLine.Option(names = ["-w", "--width"], description = ["Width of start to interest position.     default) 50"])
     private var width = 50
 
     override fun run() {
+        val bamFile = bamPath.split("[/\\\\]".toRegex()).last()
         val checkWidthFirst = CheckWidthFirst(width)
         if (!checkWidthFirst.fixedResult()) { return }
-        val runSamtools = RunSamtools(chrPos, bamPath, width, refPath)
+        val runSamtools = RunSamtools(chrPos, bamPath, width, refPath, sPath)
         val parseRead = ParseRead(runSamtools.samtoolsViewLines)
         parseRead.appender()
         val checkWidthAgain = CheckWidthAgain(width, parseRead.yCoordinates)
@@ -77,7 +84,9 @@ class BAMScopeCommand : Runnable {
                 runSamtools.chr,
                 runSamtools.intPos,
                 runSamtools.startPos,
-                runSamtools.endPos)
+                runSamtools.endPos,
+                bamFile,
+                format)
             plotAlignment.letsPlot()
         }
     }

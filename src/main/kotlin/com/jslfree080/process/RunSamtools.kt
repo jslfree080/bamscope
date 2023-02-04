@@ -23,17 +23,17 @@
  */
 package com.jslfree080.process
 
-class RunSamtools(chrPos: String, bamPath: String, width: Int, refPath: String) {
+class RunSamtools(chrPos: String, bamPath: String, width: Int, refPath: String, sPath: String) {
     val chr = chrPos.split(":")[0]
     val intPos = chrPos.split(":")[1]
     val startPos = (intPos.toInt() - width).toString()
     val endPos = (intPos.toInt() + width).toString()
     // Run samtools to extract the reads within the specified region
-    val samtoolsViewLines = ReadSamtools.VIEW.processToLines(bamPath, chr, startPos, endPos)
+    val samtoolsViewLines = ReadSamtools.VIEW.processToLines(sPath, bamPath, chr, startPos, endPos)
     // Run samtools to extract the reference sequence
     private val extraPos = (2 * endPos.toInt() - startPos.toInt()).toString()
     private val samtoolsFaidxLines = if (refPath == "noReferencePath") listOf("noReference", "")
-    else ReadSamtools.FAIDX.processToLines(refPath, chr, startPos, extraPos)
+    else ReadSamtools.FAIDX.processToLines(sPath, refPath, chr, startPos, extraPos)
     private val samtoolsFaidxString = samtoolsFaidxLines.drop(1).joinToString("")
     val samtoolsFaidxPair = (startPos.toInt() until extraPos.toInt()).zip(samtoolsFaidxString.toList())
         .map { (list1, list2) -> list1 to list2.toString() }
