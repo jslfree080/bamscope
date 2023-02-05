@@ -32,19 +32,20 @@ import org.jetbrains.letsPlot.export.*
 import kotlin.math.exp
 
 class PlotAlignment(private val newPositions: MutableList<Int>,
-                    newSamtoolsMap: List<Pair<Int, String>>,
+                    newSamtoolsMap: List<Pair<Int, String>>, // with fasta file
                     private val yCoordinates: MutableList<Int>,
                     private val bases: MutableList<String>,
                     private val pseudoReferenceForLegend: MutableList<String>,
-                    private val basesRef: List<String>,
+                    basesRef: List<String>, // with fasta file
                     private val qualities: MutableList<Int>,
-                    private val pairForShift: List<Pair<Int, Int>>,
+                    pairForShift: List<Pair<Int, Int>>,
                     private val chr: String,
                     private val intPos: String,
                     private val startPos: String,
                     private val endPos: String,
                     private val bamFile: String,
-                    private val format: String) {
+                    private val format: String,
+                    private val outPath: String) {
     // normalize qualities to [0, 1]
     private val alpha: MutableList<Double> = qualities
         .map { it.toDouble() / qualities.max().toDouble() } as MutableList<Double>
@@ -53,13 +54,12 @@ class PlotAlignment(private val newPositions: MutableList<Int>,
         "x" to newPositions,
         "y" to yCoordinates,
         "c" to bases,
-        "cz" to pseudoReferenceForLegend,
         "quality" to alpha
     )
 
     private val dataRef = mapOf(
         "xRef" to newSamtoolsMap.map { (list1, _) -> list1 },
-        "yRef" to List(newSamtoolsMap.map { (list1, _) -> list1 }.size) {-2},
+        "yRef" to List(newSamtoolsMap.map { (list1, _) -> list1 }.size) {-1},
         "cRef" to basesRef
     )
 
@@ -97,7 +97,7 @@ class PlotAlignment(private val newPositions: MutableList<Int>,
             .forEach { alpha[it] = 1.0 }
 
         // create scatter plot
-        val p = ggplot(data) +
+        val p = ggplot() +
                 ggtitle("$chr:$intPos") +
                 geomVLine(
                     xintercept = intPos.toInt() + shiftPositionOfInterest,
@@ -110,10 +110,18 @@ class PlotAlignment(private val newPositions: MutableList<Int>,
                     size = 0.5 * exp(-0.0048 * (yCoordinates.max() + 2))
                 ) +
                 geomPoint(
+                    data = data,
                     shape = 15,
                     size = 2.2 * exp(-0.0048 * (yCoordinates.max() + 2))
                 )
                 { x = "x"; y = "y"; color = "c"; alpha = "quality" } +
+
+                geomPoint(
+                    data = dataRef,
+                    shape = 15,
+                    size = 2.2 * exp(-0.0048 * (yCoordinates.max() + 2))
+                )
+                { x = "xRef"; y = "yRef"; color = "cRef" } +
                 org.jetbrains.letsPlot.themes.themeLight() +
                 theme(
                     panelBackground = org.jetbrains.letsPlot.themes.elementRect(fill = "#1A2421", color = "#1A2421"),
@@ -137,10 +145,11 @@ class PlotAlignment(private val newPositions: MutableList<Int>,
                 ) +
                 guides(alpha = "none")
 
+
         // show the plot
         // p.show()
 
         // save the plot
-        ggsave(p, "${bamFile}-${chr}-${intPos}.${format}", 9.9, 600, "/Users/jslit/Downloads")
+        ggsave(p, "${bamFile}-${chr}-${intPos}.${format}", 9.9, 600, outPath)
     }
 }

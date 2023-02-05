@@ -26,7 +26,7 @@ package com.jslfree080.cli
 import com.jslfree080.process.*
 import picocli.CommandLine
 
-@CommandLine.Command(name = "bamscope", version = ["bamscope 0.5.2"],
+@CommandLine.Command(name = "bamscope", version = ["bamscope 0.6.0"],
     description = ["A command line tool (in Kotlin/JVM) for visualizing BAM alignments."])
 class BAMScopeCommand : Runnable {
 
@@ -70,24 +70,30 @@ class BAMScopeCommand : Runnable {
             parseRead.insertedIndexes
         )
         blockAdjustment.generateOutputForGap()
+
+        var newSamtoolsMap = emptyList<Pair<Int, String>>()
+        var basesRef = emptyList<String>()
         if (runSamtools.samtoolsFaidxPair.isNotEmpty()) {
             val extractReference = ExtractReference(blockAdjustment.pairForShift, runSamtools.samtoolsFaidxPair)
-            val plotAlignment = PlotAlignment(
-                blockAdjustment.newPositions,
-                extractReference.newSamtoolsMap,
-                parseRead.yCoordinates,
-                parseRead.bases,
-                parseRead.pseudoReferenceForLegend,
-                extractReference.returnBasesRef(),
-                parseRead.qualities,
-                blockAdjustment.pairForShift,
-                runSamtools.chr,
-                runSamtools.intPos,
-                runSamtools.startPos,
-                runSamtools.endPos,
-                bamFile,
-                format)
-            plotAlignment.letsPlot()
+            basesRef = extractReference.returnBasesRef()
+            newSamtoolsMap = extractReference.newSamtoolsMap
         }
+        val plotAlignment = PlotAlignment(
+            blockAdjustment.newPositions,
+            newSamtoolsMap,
+            parseRead.yCoordinates,
+            parseRead.bases,
+            parseRead.pseudoReferenceForLegend,
+            basesRef,
+            parseRead.qualities,
+            blockAdjustment.pairForShift,
+            runSamtools.chr,
+            runSamtools.intPos,
+            runSamtools.startPos,
+            runSamtools.endPos,
+            bamFile,
+            format,
+            outPath)
+        plotAlignment.letsPlot()
     }
 }
