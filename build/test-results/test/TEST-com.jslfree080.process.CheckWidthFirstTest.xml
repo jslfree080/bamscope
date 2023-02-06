@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.jslfree080.process.CheckWidthFirstTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-02-05T05:38:40" hostname="jungsoo080ui-MacBookPro.local" time="0.001">
+<testsuite name="com.jslfree080.process.CheckWidthFirstTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-02-06T10:13:54" hostname="jungsoo080ui-MacBookPro.local" time="0.002">
   <properties/>
-  <testcase name="testFixedResult()" classname="com.jslfree080.process.CheckWidthFirstTest" time="0.001"/>
+  <testcase name="testFixedResult()" classname="com.jslfree080.process.CheckWidthFirstTest" time="0.002"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

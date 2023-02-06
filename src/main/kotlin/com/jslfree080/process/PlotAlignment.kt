@@ -21,15 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.jslfree080.process
 
+import kotlin.math.exp
 import org.jetbrains.letsPlot.*
 import org.jetbrains.letsPlot.label.ggtitle
 import org.jetbrains.letsPlot.geom.*
 import org.jetbrains.letsPlot.themes.theme
 import org.jetbrains.letsPlot.scale.*
+import org.jetbrains.letsPlot.geom.extras.arrow
 import org.jetbrains.letsPlot.export.*
-import kotlin.math.exp
 
 class PlotAlignment(private val newPositions: MutableList<Int>,
                     newSamtoolsMap: List<Pair<Int, String>>, // with fasta file
@@ -38,6 +40,7 @@ class PlotAlignment(private val newPositions: MutableList<Int>,
                     private val pseudoReferenceForLegend: MutableList<String>,
                     basesRef: List<String>, // with fasta file
                     private val qualities: MutableList<Int>,
+                    directions: MutableList<String>,
                     pairForShift: List<Pair<Int, Int>>,
                     private val chr: String,
                     private val intPos: String,
@@ -73,6 +76,14 @@ class PlotAlignment(private val newPositions: MutableList<Int>,
 
     private var baseColors = listOf("#DC143C", "#1E90FF", "#32CD32", "#FFD700", "#FFFFFF", "#1A2421", "#696969")
         .zip(listOf("A", "C", "G", "T", "del", "gap", "N")).toMap()
+
+    private val directionValues = directions.map {
+        when (it) {
+            "+" -> 1
+            "-" -> -1
+            else -> 0
+        }
+    }
 
     fun letsPlot() {
         // legend adjustment
@@ -115,7 +126,6 @@ class PlotAlignment(private val newPositions: MutableList<Int>,
                     size = 2.2 * exp(-0.0048 * (yCoordinates.max() + 2))
                 )
                 { x = "x"; y = "y"; color = "c"; alpha = "quality" } +
-
                 geomPoint(
                     data = dataRef,
                     shape = 15,
@@ -140,16 +150,42 @@ class PlotAlignment(private val newPositions: MutableList<Int>,
                 ) +
                 org.jetbrains.letsPlot.coord.coordFixed(
                     ratio = 1,
-                    xlim = Pair(startPos.toInt() - 0.5, endPos.toInt() + 0.5),
+                    xlim = Pair(
+                        startPos.toInt() - 0.5 + shiftPositionOfInterest,
+                        endPos.toInt() + 0.5 + shiftPositionOfInterest
+                    ),
                     ylim = Pair(-1.5, yCoordinates.max() + 0.5)
                 ) +
-                guides(alpha = "none")
-
+                guides(alpha = "none") +
+                geomSegment(
+            color = "#1A2421",
+            arrow = arrow(type = "closed", length = 2.2 * exp(-0.0164 * (yCoordinates.max() + 2)))
+        )
+        {
+            x = newPositions.withIndex().map { (index, _) ->
+                startPos.toInt() + shiftPositionOfInterest - 0.5 * (directionValues[index] - 1) }
+            y = yCoordinates
+            xend = newPositions.withIndex().map { (index, _) ->
+                startPos.toInt() + shiftPositionOfInterest + 0.5 * (directionValues[index] + 1) }
+            yend = yCoordinates
+        } +
+                geomSegment(
+            color = "#1A2421",
+            arrow = arrow(type = "closed", length = 2.2 * exp(-0.0164 * (yCoordinates.max() + 2)))
+        )
+        {
+            x = newPositions.withIndex().map { (index, _) ->
+                endPos.toInt() + shiftPositionOfInterest - 0.5 * (directionValues[index] + 1) }
+            y = yCoordinates
+            xend = newPositions.withIndex().map { (index, _) ->
+                endPos.toInt() + shiftPositionOfInterest + 0.5 * (directionValues[index] - 1) }
+            yend = yCoordinates
+        }
 
         // show the plot
         // p.show()
 
         // save the plot
-        ggsave(p, "${bamFile}-${chr}-${intPos}.${format}", 9.9, 600, outPath)
+        ggsave(p, "${bamFile}-${chr}-${intPos}.${format}", 9.99, 600, outPath)
     }
 }

@@ -21,10 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.jslfree080.bamscope
 
-import com.jslfree080.cli.BAMScopeCommand
 import picocli.CommandLine
+import com.jslfree080.cli.BAMScopeCommand
 
 fun main(args: Array<String>) {
     CommandLine(BAMScopeCommand()).execute(*args)

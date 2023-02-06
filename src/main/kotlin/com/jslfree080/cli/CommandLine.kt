@@ -21,12 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.jslfree080.cli
 
-import com.jslfree080.process.*
 import picocli.CommandLine
+import com.jslfree080.process.*
 
-@CommandLine.Command(name = "bamscope", version = ["bamscope 0.6.0"],
+@CommandLine.Command(name = "bamscope", version = ["bamscope 1.0.0"],
     description = ["A command line tool (in Kotlin/JVM) for visualizing BAM alignments."])
 class BAMScopeCommand : Runnable {
 
@@ -86,6 +87,7 @@ class BAMScopeCommand : Runnable {
             parseRead.pseudoReferenceForLegend,
             basesRef,
             parseRead.qualities,
+            parseRead.directions,
             blockAdjustment.pairForShift,
             runSamtools.chr,
             runSamtools.intPos,

@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package com.jslfree080.process
 
 import com.jslfree080.process.cigars.*
@@ -32,7 +33,7 @@ class ParseRead(samtoolsViewLines: List<String>) {
     private var yCoordinate = 0
     var yCoordinates = mutableListOf<Int>()
     var positions = mutableListOf<Int>()
-    private var directions = mutableListOf<String>()
+    var directions = mutableListOf<String>()
     var pseudoReferenceForLegend = mutableListOf<String>()
     var bases = mutableListOf<String>()
     var qualities = mutableListOf<Int>()
@@ -163,6 +164,7 @@ class ParseRead(samtoolsViewLines: List<String>) {
             bases = parameterMID.bases
             pseudoReferenceForLegend = parameterMID.pseudoReferenceForLegend
             qualities = parameterMID.qualities
+            directions = parameterMID.directions
         }
     }
 }
