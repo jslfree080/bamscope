@@ -1,5 +1,5 @@
 # bamscope
-
+![Build Status](https://github.com/jslfree080/bamscope/actions/workflows/tests.yml/badge.svg?branch=main)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/jslfree080/bamscope/blob/main/LICENSE)
 
 <img alt="demonstration" src="https://github.com/jslfree080/jslfree080/blob/main/example2.png" width=550>
