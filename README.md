@@ -1,5 +1,7 @@
 # bamscope
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/jslfree080/bamscope/blob/main/LICENSE)
+
 <img alt="demonstration" src="https://github.com/jslfree080/jslfree080/blob/main/example2.png" width=550>
 
 A command line tool (in Kotlin/JVM) for visualizing BAM alignments.
