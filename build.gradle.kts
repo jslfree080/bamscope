@@ -73,6 +73,7 @@ tasks.withType<Jar> {
     // Otherwise you'll get a "No main manifest attribute" error
     manifest {
         attributes["Main-Class"] = "com.jslfree080.bamscope.RunBAMScopeKt"
+        archiveFileName.set("bamscope.jar")
     }
 
     // To avoid the duplicate handling strategy error
@@ -88,4 +89,4 @@ tasks.withType<Jar> {
 }
 
 // ./gradlew build |or| ./gradlew clean build (Delete all the previous version of the dependencies)
-// java -jar build/libs/bamscope*.jar 18:53253385 ~/Downloads/*.bam -r ~/Downloads/human_g1k_v37_decoy.fasta -o ~/Desktop/
+// java -jar build/libs/bamscope.jar 18:53253385 ~/Downloads/*.bam -r ~/Downloads/human_g1k_v37_decoy.fasta -o ~/Desktop/

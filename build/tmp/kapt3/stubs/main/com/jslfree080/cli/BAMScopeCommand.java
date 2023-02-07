@@ -7,7 +7,7 @@ import java.lang.System;
 public final class BAMScopeCommand implements java.lang.Runnable {
     @picocli.CommandLine.Parameters(index = "0", description = {"Input chromosomal position.      ex) (chr)N:XXXXXXXX"})
     private java.lang.String chrPos;
-    @picocli.CommandLine.Parameters(index = "1", description = {"Path to an input bam file.         ex) path/to/x.bam"})
+    @picocli.CommandLine.Parameters(index = "1", description = {"Path to an indexed bam file.       ex) path/to/x.bam"})
     private java.lang.String bamPath;
     @picocli.CommandLine.Option(names = {"-f", "--format"}, description = {"File format of an output image.         default) png"})
     private java.lang.String format = "png";

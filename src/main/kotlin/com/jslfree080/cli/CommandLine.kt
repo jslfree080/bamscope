@@ -34,7 +34,7 @@ class BAMScopeCommand : Runnable {
     @CommandLine.Parameters(index = "0", description = ["Input chromosomal position.      ex) (chr)N:XXXXXXXX"])
     private lateinit var chrPos: String
 
-    @CommandLine.Parameters(index = "1", description = ["Path to an input bam file.         ex) path/to/x.bam"])
+    @CommandLine.Parameters(index = "1", description = ["Path to an indexed bam file.       ex) path/to/x.bam"])
     private lateinit var bamPath: String
 
     @CommandLine.Option(names = ["-f", "--format"], description = ["File format of an output image.         default) png"])
