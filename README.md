@@ -2,9 +2,13 @@
 ![Build Status](https://github.com/jslfree080/bamscope/actions/workflows/tests.yml/badge.svg?branch=main)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/jslfree080/bamscope/blob/main/LICENSE)
 
+A command line tool (in Kotlin/JVM) for visualizing BAM alignments.
+
 <img alt="demonstration" src="https://github.com/jslfree080/jslfree080/blob/main/example2.png" width=550>
 
-A command line tool (in Kotlin/JVM) for visualizing BAM alignments.
+## Interpretation of Output Image
+
+The images produced display the alignment of the bases using colored blocks. The opacity of each block reflects the quality score of the base, with blocks valued near 1 displayed for high-quality scores near 40 and those valued near 0 for low-quality scores close to 0. The strandedness of each read's alignment is indicated in both the leftmost and rightmost columns, where '->' indicates a forward strand alignment and '<-' indicates a reverse strand alignment.
 
 ## Prerequisites
 
