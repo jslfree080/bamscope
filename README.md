@@ -57,7 +57,7 @@ Options:
     java -jar build/libs/bamscope.jar 18:53254446 ~/Downloads/x.bam -r ~/Downloads/x.fasta -o ~/Desktop/
 ```
 
-* Example usage with VCF file (⚠️ Warning: This option may be computationally intensive.):
+* Example usage with VCF file (⚠️ This option may be computationally intensive):
 ```
     java -jar build/libs/bamscope.jar ~/Desktop/x.vcf ~/Downloads/x.bam -r ~/Downloads/x.fasta -o ~/Desktop/
 ```
