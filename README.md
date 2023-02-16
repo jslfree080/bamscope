@@ -52,7 +52,7 @@ Options:
   -w, --width=<width>       Width of start to interest position.     default) 50
 ```
 
-* Example usage for specific position:
+* Example usage for a specific position:
 ```
     java -jar build/libs/bamscope.jar 18:53254446 ~/Downloads/x.bam -r ~/Downloads/x.fasta -o ~/Desktop/
 ```
