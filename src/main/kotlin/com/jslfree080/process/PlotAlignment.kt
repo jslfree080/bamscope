@@ -186,6 +186,6 @@ class PlotAlignment(private val newPositions: MutableList<Int>,
         // p.show()
 
         // save the plot
-        ggsave(p, "${bamFile}-${chr}-${intPos}.${format}", 9.99, 600, outPath)
+        ggsave(p, "bamscope-${bamFile}-${chr}-${intPos}.${format}", 9.99, 600, outPath)
     }
 }

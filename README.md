@@ -39,21 +39,27 @@ The resulting jar will be in `build/libs`.
 Usage: java -jar build/libs/bamscope.jar <chrPos> <bamPath> [options]
 
 Parameters:
-      <chrPos>              Input chromosomal position.      ex) (chr)N:XXXXXXXX
-      <bamPath>             Path to an indexed bam file.       ex) path/to/x.bam
+      <chrPos>              Input chromosomal position       ex) (chr)N:XXXXXXXX
+                                 or path to a VCF file.         or path/to/x.vcf
+      <bamPath>             Path to an indexed BAM file.       ex) path/to/x.bam
      
 Options:
   -f, --format=<format>     File format of an output image.         default) png
   -h, --help                Show this help message and exit.
   -o, --outPath=<outPath>   Path to an output image.                  default) .
-  -r, --refPath=<refPath>   Path to a reference fasta.       ex) path/to/x.fasta
+  -r, --refPath=<refPath>   Path to a reference FASTA.  ex) path/to/x.fasta(.fa)
   -s, --sPath=<sPath>       Path to the samtools.    ex) /usr/local/bin/samtools
   -w, --width=<width>       Width of start to interest position.     default) 50
 ```
 
-* Example usage:
+* Example usage for specific position:
 ```
     java -jar build/libs/bamscope.jar 18:53254446 ~/Downloads/x.bam -r ~/Downloads/x.fasta -o ~/Desktop/
+```
+
+* Example usage with VCF file:
+```
+    java -jar build/libs/bamscope.jar ~/Desktop/x.vcf ~/Downloads/x.bam -r ~/Downloads/x.fasta -o ~/Desktop/
 ```
 
 ## License

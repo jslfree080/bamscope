@@ -24,17 +24,18 @@
 
 package com.jslfree080.cli
 
+import java.io.File
 import picocli.CommandLine
 import com.jslfree080.process.*
 
-@CommandLine.Command(name = "bamscope", version = ["bamscope 1.0.0"],
+@CommandLine.Command(name = "bamscope", version = ["bamscope 1.1.0"],
     description = ["A command line tool (in Kotlin/JVM) for visualizing BAM alignments."])
 class BAMScopeCommand : Runnable {
 
-    @CommandLine.Parameters(index = "0", description = ["Input chromosomal position.      ex) (chr)N:XXXXXXXX"])
+    @CommandLine.Parameters(index = "0", description = ["Input chromosomal position       ex) (chr)N:XXXXXXXX\n     or path to a VCF file.         or path/to/x.vcf"])
     private lateinit var chrPos: String
 
-    @CommandLine.Parameters(index = "1", description = ["Path to an indexed bam file.       ex) path/to/x.bam"])
+    @CommandLine.Parameters(index = "1", description = ["Path to an indexed BAM file.       ex) path/to/x.bam"])
     private lateinit var bamPath: String
 
     @CommandLine.Option(names = ["-f", "--format"], description = ["File format of an output image.         default) png"])
@@ -46,7 +47,7 @@ class BAMScopeCommand : Runnable {
     @CommandLine.Option(names = ["-o", "--outPath"], description = ["Path to an output image.                  default) ."])
     private var outPath = "."
 
-    @CommandLine.Option(names = ["-r", "--refPath"], description = ["Path to a reference fasta.       ex) path/to/x.fasta"])
+    @CommandLine.Option(names = ["-r", "--refPath"], description = ["Path to a reference FASTA.  ex) path/to/x.fasta(.fa)"])
     private var refPath = "noReferencePath"
 
     @CommandLine.Option(names = ["-s", "--sPath"], description = ["Path to the samtools.    ex) /usr/local/bin/samtools"])
@@ -56,46 +57,62 @@ class BAMScopeCommand : Runnable {
     private var width = 50
 
     override fun run() {
-        val bamFile = bamPath.split("[/\\\\]".toRegex()).last()
-        val checkWidthFirst = CheckWidthFirst(width)
-        if (!checkWidthFirst.fixedResult()) { return }
-        val runSamtools = RunSamtools(chrPos, bamPath, width, refPath, sPath)
-        val parseRead = ParseRead(runSamtools.samtoolsViewLines)
-        parseRead.appender()
-        val checkWidthAgain = CheckWidthAgain(width, parseRead.yCoordinates)
-        if (!checkWidthAgain.expDecayResult()) { return }
-        val blockAdjustment = BlockAdjustment(
-            parseRead.positions,
-            parseRead.blockNumbers,
-            parseRead.partialIncrementsWithZero,
-            parseRead.insertedIndexes
-        )
-        blockAdjustment.generateOutputForGap()
-
-        var newSamtoolsMap = emptyList<Pair<Int, String>>()
-        var basesRef = emptyList<String>()
-        if (runSamtools.samtoolsFaidxPair.isNotEmpty()) {
-            val extractReference = ExtractReference(blockAdjustment.pairForShift, runSamtools.samtoolsFaidxPair)
-            basesRef = extractReference.returnBasesRef()
-            newSamtoolsMap = extractReference.newSamtoolsMap
+        var multipleChrPos = mutableListOf(chrPos)
+        if (chrPos.endsWith(".vcf")) {
+            multipleChrPos = mutableListOf()
+            val vcfFile = File(chrPos)
+            vcfFile.forEachLine { line ->
+                if (!line.startsWith("#")) { // skip header lines
+                    val fields = line.split("\t")
+                    val chrom = fields[0]
+                    val pos = fields[1]
+                    multipleChrPos += "$chrom:$pos"
+                }
+            }
         }
-        val plotAlignment = PlotAlignment(
-            blockAdjustment.newPositions,
-            newSamtoolsMap,
-            parseRead.yCoordinates,
-            parseRead.bases,
-            parseRead.pseudoReferenceForLegend,
-            basesRef,
-            parseRead.qualities,
-            parseRead.directions,
-            blockAdjustment.pairForShift,
-            runSamtools.chr,
-            runSamtools.intPos,
-            runSamtools.startPos,
-            runSamtools.endPos,
-            bamFile,
-            format,
-            outPath)
-        plotAlignment.letsPlot()
+        // println(multipleChrPos)
+        multipleChrPos.forEach {
+            val bamFile = bamPath.split("[/\\\\]".toRegex()).last()
+            val checkWidthFirst = CheckWidthFirst(width)
+            if (!checkWidthFirst.fixedResult()) { return }
+            val runSamtools = RunSamtools(it, bamPath, width, refPath, sPath)
+            val parseRead = ParseRead(runSamtools.samtoolsViewLines)
+            parseRead.appender()
+            val checkWidthAgain = CheckWidthAgain(width, parseRead.yCoordinates)
+            if (!checkWidthAgain.expDecayResult()) { return }
+            val blockAdjustment = BlockAdjustment(
+                parseRead.positions,
+                parseRead.blockNumbers,
+                parseRead.partialIncrementsWithZero,
+                parseRead.insertedIndexes
+            )
+            blockAdjustment.generateOutputForGap()
+
+            var newSamtoolsMap = emptyList<Pair<Int, String>>()
+            var basesRef = emptyList<String>()
+            if (runSamtools.samtoolsFaidxPair.isNotEmpty()) {
+                val extractReference = ExtractReference(blockAdjustment.pairForShift, runSamtools.samtoolsFaidxPair)
+                basesRef = extractReference.returnBasesRef()
+                newSamtoolsMap = extractReference.newSamtoolsMap
+            }
+            val plotAlignment = PlotAlignment(
+                blockAdjustment.newPositions,
+                newSamtoolsMap,
+                parseRead.yCoordinates,
+                parseRead.bases,
+                parseRead.pseudoReferenceForLegend,
+                basesRef,
+                parseRead.qualities,
+                parseRead.directions,
+                blockAdjustment.pairForShift,
+                runSamtools.chr,
+                runSamtools.intPos,
+                runSamtools.startPos,
+                runSamtools.endPos,
+                bamFile,
+                format,
+                outPath)
+            plotAlignment.letsPlot()
+        }
     }
 }
