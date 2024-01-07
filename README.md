@@ -4,7 +4,8 @@
 
 A command line tool (in Kotlin/JVM) for intuitively visualizing BAM alignments.
 
-<img alt="demonstration" src="https://github.com/jslfree080/jslfree080/blob/main/example2.png" width=600>
+<img alt="demonstration" src="https://github.com/jslfree080/jslfree080/blob/main/img/example.png" width=600>
+<img alt="demonstration" src="https://github.com/jslfree080/jslfree080/blob/main/img/example2.png" width=600>
 
 ## Interpretation of Output Image
 
